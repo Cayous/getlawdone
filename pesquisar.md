@@ -16,6 +16,7 @@ Use o Read tool AGORA, nesta ordem, antes de qualquer outra coisa:
 3. `.caso/ESTADO.md`
 4. `~/.claude/commands/caso/templates/PESQUISA.md`
 5. `~/.claude/commands/caso/references/gestao-contexto.md`
+6. `~/.claude/commands/caso/references/pesquisa-jurisprudencia.md` — protocolo detalhado (fontes, fases, formato de retorno, regras de qualidade)
 
 **Se `.caso/fases/2-discussao/DISCUSSAO.md` não existir**, pare e diga: "Discussão não encontrada. Rode `/caso:discutir` antes."
 
@@ -23,17 +24,21 @@ Use o Read tool AGORA, nesta ordem, antes de qualquer outra coisa:
 
 ## O que fazer nesta fase
 
-### 1. Delegar pesquisa ao subagente quando possível
+### 1. Executar o protocolo de pesquisa
 
-Para manter o contexto enxuto, use o subagente especializado `analise-juridica-pesquisador` (se disponível) para cada bloco de busca pesado. Delegue buscas de jurisprudência, ementas completas, doutrina — o subagente devolve o achado sintetizado e você não carrega o ruído das SERPs no contexto principal.
+Siga o protocolo definido em `~/.claude/commands/caso/references/pesquisa-jurisprudencia.md` (seções 1–6):
 
-Caso o subagente não esteja disponível, use WebSearch + WebFetch diretamente, preferindo fontes oficiais (jusbrasil, tribunais, Senado, STJ, STF).
+- **Fontes prioritárias:** STJ, STF, TST, TRFs, Planalto (tabela com URLs na seção 1).
+- **Queries:** variações da seção 3.
+- **Mínimo de 8 buscas** cobrindo STJ (repetitivo), STF (repercussão geral), súmulas, tribunal de 2ª instância, doutrina, informativos (seção 4, Fase B).
+- **Verificação obrigatória:** abra o link oficial com WebFetch antes de citar qualquer julgado. Só entra no `PESQUISA.md` o que foi VERIFICADO (seção 4, Fase C).
+- **Se o contexto ficar pesado** durante a pesquisa (muitas SERPs abertas), use o Agent tool com `subagent_type=general-purpose` para delegar um lote de buscas e receber só o achado sintetizado — isso mantém o contexto principal enxuto. Não é obrigatório, mas é útil quando há 4+ teses para cobrir.
 
 ### 2. Para cada tese adotada na `DISCUSSAO.md`: montar precedentes
 
 Para cada tese T1, T2, ...:
 - Buscar 2–4 precedentes relevantes (prefira tribunais superiores e tribunal de destino da peça).
-- Para cada precedente: **obter a ementa integral** (nunca parcial — é regra do `peticao-juridica`).
+- Para cada precedente: **obter a ementa integral** (nunca parcial — regra firme em `references/pesquisa-jurisprudencia.md`, seção 4).
 - Se a ementa integral não for encontrável, registrar o link público e a observação "Ementa parcial. Consultar íntegra em [URL]".
 - Formatar em blockquote, com negritos em markdown nos trechos-chave (dispositivo invocado, conclusão, expressões centrais como "ampla e irrestrita recorribilidade").
 - Referência completa no formato: `(Tribunal – Tipo: Nº, Relator: Nome, Data de julgamento: DD/MM/AAAA, Órgão, Data de publicação: DD/MM/AAAA)`.

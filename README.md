@@ -19,7 +19,7 @@ A skill `/caso:*` resolve isso dividindo o trabalho em fases, cada uma produzind
      ↓
 /caso:planejar   →   4. Plano da peça: storyboard seção a seção
      ↓
-/caso:executar   →   5. Execução: gera .docx final (delega ao peticao-juridica)
+/caso:executar   →   5. Execução: gera .docx final via template JS local
 ```
 
 Cada comando começa com um bloco **LEIA PRIMEIRO** que força o uso do `Read` tool nos `.md` das fases anteriores **antes de qualquer outra ação**. Se faltar um artefato, o comando para e indica qual `/caso:*` rodar antes — nada de improvisar de memória após um `/clear`.
@@ -67,12 +67,11 @@ A skill opera sobre um workspace local `.caso/` criado na pasta onde você invoc
 
 ### Dependências
 
-Esta skill consome duas outras skills no fluxo:
+A skill é auto-contida — todo o conhecimento técnico (tipografia, template de geração do `.docx`, protocolo de pesquisa de jurisprudência, catálogo de tipos de peça) vive em `templates/` e `references/` deste repo. Dependências externas:
 
-- **[peticao-juridica](https://github.com/Cayous/peticao-juridica)** (obrigatória) — a fase `/caso:executar` delega a geração do `.docx` a ela. Tipografia Century Gothic, espaçamento 1.5, margens assimétricas, numeração `01.`, citações com recuo, imagens via `ImageRun`. Deve estar em `~/.claude/commands/peticao-juridica/`.
-- **analise-juridica** (recomendada) — a fase `/caso:discutir` e `/caso:pesquisar` usam esta skill para sondagem e pesquisa de precedentes brasileiros (STJ, STF, TJs). Sem ela, as fases caem para `WebSearch` direto.
-
-Estas duas skills são independentes e não fazem parte deste repo.
+- **Node.js** + `docx` (docx-js) instalado globalmente — usado pela fase `/caso:executar` para renderizar o `.docx`. Instale com `sudo npm install -g docx`.
+- **Python 3** — usado por `scripts/validate.sh` para verificar a integridade estrutural do `.docx` gerado (apenas `zipfile` e `xml.etree` da stdlib).
+- **pandoc** (opcional, recomendado) — o `validate.sh` usa pandoc para extrair texto do `.docx` e rodar 6 checks de conteúdo (endereçamento, fecho, OAB, etc.). Sem pandoc, o script roda só a validação estrutural.
 
 ## Como usar — exemplo completo
 
@@ -144,7 +143,7 @@ O detalhe das regras está em [`references/gestao-contexto.md`](./references/ges
 ├── estado.md                         # /caso:estado
 ├── pausar.md                         # /caso:pausar
 ├── retomar.md                        # /caso:retomar
-├── templates/                        # esqueletos dos .md de cada fase
+├── templates/                        # esqueletos consumidos pelas fases
 │   ├── CASO.md
 │   ├── ESTADO.md
 │   ├── DOSSIE.md
@@ -153,11 +152,17 @@ O detalhe das regras está em [`references/gestao-contexto.md`](./references/ges
 │   ├── PLANO.md
 │   ├── EXECUCAO.md
 │   ├── RESUMO-DOC.md
-│   └── HANDOFF.md
-└── references/                       # documentação consultada pelos subcomandos
-    ├── estrutura-caso.md             # layout de .caso/ e regras fixas
-    ├── gestao-contexto.md            # invariantes de read-first e encerramento
-    └── leitura-documentos.md         # como resumir PDFs grandes sem estourar contexto
+│   ├── HANDOFF.md
+│   └── peticao_base.js               # template JS (docx-js) da fase 5
+├── references/                       # documentação consultada pelos subcomandos
+│   ├── estrutura-caso.md             # layout de .caso/ e regras fixas
+│   ├── gestao-contexto.md            # invariantes de read-first e encerramento
+│   ├── leitura-documentos.md         # como resumir PDFs grandes sem estourar contexto
+│   ├── tipos_pecas.md                # catálogo de peças (endereçamento, prazo, estrutura)
+│   ├── pesquisa-jurisprudencia.md    # protocolo de pesquisa (STJ/STF/TRFs/doutrina)
+│   └── geracao-docx.md               # regras técnicas/tipográficas do .docx
+└── scripts/
+    └── validate.sh                   # validação estrutural + de conteúdo do .docx
 ```
 
 ## Licença

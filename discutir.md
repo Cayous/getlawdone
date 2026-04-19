@@ -17,7 +17,8 @@ Use o Read tool AGORA, nesta ordem, antes de qualquer outra coisa — inclusive 
 4. `.caso/ESTADO.md`
 5. `~/.claude/commands/caso/templates/DISCUSSAO.md`
 6. `~/.claude/commands/caso/references/gestao-contexto.md`
-7. `~/.claude/commands/peticao-juridica/references/tipos_pecas.md` (para saber as exigências estruturais do tipo de peça escolhido)
+7. `~/.claude/commands/caso/references/tipos_pecas.md` (para saber as exigências estruturais do tipo de peça escolhido)
+8. `~/.claude/commands/caso/references/pesquisa-jurisprudencia.md` (seção 7 — sondagem curta para validar viabilidade das teses)
 
 **Se `.caso/fases/1-caso/DOSSIE.md` não existir**, pare imediatamente e diga: "Dossiê não encontrado em `.caso/fases/1-caso/DOSSIE.md`. Rode `/caso:novo` antes."
 
@@ -34,9 +35,14 @@ A partir dos fatos e do tipo de peça, levante 3–6 teses jurídicas plausívei
 - Aponte o fundamento legal preliminar (artigos, leis, súmulas — sem ainda pesquisar jurisprudência).
 - Conecte à prova nos fatos do dossiê.
 
-### 2. Usar a skill `analise-juridica` para sondagem de precedentes
+### 2. Sondagem de precedentes (curta)
 
-Invoque a skill `analise-juridica` com os fatos e teses candidatas para obter uma primeira sondagem de precedentes relevantes. **Importante:** o resultado da `analise-juridica` é insumo — você lê, sintetiza em teses, **não cola o output bruto** na `DISCUSSAO.md`. A pesquisa profunda (ementas integrais, doutrina) fica para a fase 3.
+Para cada tese candidata, faça **1 a 2 buscas** via WebSearch para confirmar que ela tem lastro jurisprudencial mínimo. Siga a **seção 7** (`Sondagem`) do `pesquisa-jurisprudencia.md` — esta é uma sondagem, não pesquisa profunda:
+
+- Busca rápida por **tema repetitivo STJ, súmula aplicável, ou julgado recente favorável/contrário**.
+- Registre na tese apenas uma nota do tipo: *"há REsp X favorável, ano Y — ementa integral fica para /caso:pesquisar"* ou *"Súmula N do STJ contraria esta tese — descartar"*.
+- **Não busque ementa integral, não monte blocos citáveis, não extraia doutrina.** Isso é fase 3.
+- **Não cole output bruto de WebSearch** — sintetize em uma linha por busca.
 
 ### 3. Filtrar: teses adotadas vs. descartadas
 

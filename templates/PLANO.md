@@ -54,6 +54,6 @@ requer_leitura:
 ## Observações para a execução
 
 <Sinais específicos para a fase 5. Ex:>
-- Citações em 11pt com recuo 1500 DXA, sem itálico (regra do `peticao-juridica`).
+- Citações em 11pt com recuo 1500 DXA, sem itálico (ver `references/geracao-docx.md`, seção 1).
 - Negritar **"ampla e irrestrita recorribilidade"** no Precedente 1.2.
 - Inserir print de WhatsApp de `documentos/print1.jpg` logo após o §08.

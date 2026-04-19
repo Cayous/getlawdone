@@ -16,7 +16,7 @@ Use o Read tool AGORA, nesta ordem:
 3. `.caso/CASO.md` — tipo de peça, partes, objetivo
 4. `.caso/ESTADO.md`
 5. `~/.claude/commands/caso/templates/PLANO.md`
-6. `~/.claude/commands/peticao-juridica/references/tipos_pecas.md` — estrutura exigida pelo tipo de peça
+6. `~/.claude/commands/caso/references/tipos_pecas.md` — estrutura exigida pelo tipo de peça
 
 **Se qualquer um dos três primeiros não existir**, pare e indique qual `/caso:*` rodar antes.
 
@@ -39,7 +39,7 @@ Para cada seção da estrutura:
 - **Frase-tese:** uma frase resumindo o que a seção prova.
 - **Conteúdo esperado:** tópicos a cobrir (fatos, cálculo de prazo, exposição da decisão agravada, argumentos).
 - **Precedentes a inserir:** ids dos blocos da `PESQUISA.md` (ex: "Precedente 1.2, Doutrina sobre T1").
-- **Imagens a inserir:** se houver, com caminho em `.caso/documentos/` e descrição (seguindo Passo 1b do `peticao-juridica`).
+- **Imagens a inserir:** se houver, com caminho em `.caso/documentos/` (ou `.caso/resumos/imagens-<slug>/`) e descrição. Ver `~/.claude/commands/caso/references/geracao-docx.md`, seção 5.
 
 ### 4. Planejar os pedidos
 
@@ -54,7 +54,7 @@ Inclua: cláusula de protesto por provas, "Nestes termos, pede deferimento", loc
 Sinalize restrições específicas que a fase 5 precisa respeitar. Exemplos:
 - Negritar expressões específicas em precedentes.
 - Inserir imagem logo após um parágrafo.
-- Citações em 11pt com recuo 1500 DXA (regra `peticao-juridica`).
+- Citações em 11pt com recuo 1500 DXA (ver `references/geracao-docx.md`, seção 1).
 - Ementa parcial de um precedente — incluir nota de rodapé.
 
 ## ENCERRAMENTO (obrigatório)

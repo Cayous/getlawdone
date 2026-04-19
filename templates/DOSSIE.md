@@ -51,4 +51,4 @@ requer_leitura: []
 
 ## Tipo de peça pretendida
 
-<Do catálogo `peticao-juridica/references/tipos_pecas.md`. Ex: "Agravo Interno (art. 1.021 do CPC).">
+<Do catálogo `references/tipos_pecas.md` deste repo. Ex: "Agravo Interno (art. 1.021 do CPC).">

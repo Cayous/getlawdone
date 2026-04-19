@@ -38,7 +38,7 @@ atualizado_em: <YYYY-MM-DD HH:MM>
 
 ## Imagens / anexos internos relevantes
 
-<Descrição posicional, sem tentar transcrever. Útil para o Passo 1b do `peticao-juridica` se a peça final precisar incluí-las.>
+<Descrição posicional, sem tentar transcrever. Útil para a fase 5 caso a peça final precise incluir a imagem (ver `references/geracao-docx.md`, seção 5).>
 
 - **p. 48:** print de conversa WhatsApp entre <partes>.
 - **pp. 52–55:** cópia de fatura com destaque em vermelho no valor.

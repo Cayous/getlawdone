@@ -46,7 +46,7 @@ Pergunte ao usuário, em uma única mensagem (lista numerada), nesta ordem:
 
 1. Nome do cliente e polo (autor/requerente/agravante ou réu/requerido/agravado).
 2. Nome da parte contrária.
-3. Tipo de peça pretendida (consulte `~/.claude/commands/peticao-juridica/references/tipos_pecas.md` para sugerir opções pertinentes).
+3. Tipo de peça pretendida (consulte `~/.claude/commands/caso/references/tipos_pecas.md` para sugerir opções pertinentes).
 4. Tribunal/juízo e número do processo (CNJ) — ou "sem processo" se é petição inicial.
 5. Prazo para protocolo (data limite), ou "sem prazo fixo".
 6. Objetivo em uma frase — o que se pede.

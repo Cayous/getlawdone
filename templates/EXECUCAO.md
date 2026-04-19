@@ -16,7 +16,7 @@ requer_leitura:
 
 - **Arquivo gerado:** `.caso/fases/5-execucao/peticao.docx`
 - **Tamanho aproximado:** <ex: 12 páginas>
-- **Validação do `peticao-juridica`:** <passou | 1 aviso | 2 avisos | falhou — com detalhes>
+- **Validação (`scripts/validate.sh`):** <passou | 1 aviso | 2 avisos | falhou — com detalhes>
 
 ## Desvios em relação ao `PLANO.md`
 

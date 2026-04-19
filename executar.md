@@ -1,6 +1,6 @@
 ---
 name: caso:executar
-description: "Fase 5 de 5 — redige a peça final em .docx delegando à skill peticao-juridica. Segue o PLANO.md mecanicamente, insere precedentes da PESQUISA.md. Depende de /caso:planejar."
+description: "Fase 5 de 5 — redige a peça final em .docx usando o template local peticao_base.js. Segue o PLANO.md mecanicamente, insere precedentes da PESQUISA.md, valida com scripts/validate.sh. Depende de /caso:planejar."
 ---
 
 # /caso:executar — Fase 5 de 5 (Execução da peça)
@@ -16,7 +16,8 @@ Use o Read tool AGORA, nesta ordem:
 3. `.caso/CASO.md` — partes, tipo de peça, metadados
 4. `.caso/ESTADO.md`
 5. `~/.claude/commands/caso/templates/EXECUCAO.md`
-6. `~/.claude/commands/peticao-juridica/SKILL.md` — esta é a skill que você vai invocar para montar o `.docx`
+6. `~/.claude/commands/caso/references/geracao-docx.md` — regras tipográficas + uso do template JS
+7. `~/.claude/commands/caso/templates/peticao_base.js` — template JS com funções auxiliares (`p`, `pRuns`, `pSemNum`, `titulo`, `citacao`, `pedido`, `imagem`, ...)
 
 **Se `.caso/fases/4-plano/PLANO.md` não existir**, pare e diga: "Plano não encontrado. Rode `/caso:planejar` antes."
 
@@ -24,48 +25,70 @@ Use o Read tool AGORA, nesta ordem:
 
 ## O que fazer nesta fase
 
-### 1. Delegar a geração do .docx à skill `peticao-juridica`
+### 1. Montar o arquivo JS da peça
 
-A skill `peticao-juridica` já sabe gerar o `.docx` com tipografia Century Gothic, espaçamento 1.5, margens assimétricas, numeração `01.`, citações com recuo 1500 DXA, imagens etc. Você **não vai reimplementar isso aqui**.
-
-Invoque a skill `peticao-juridica` fornecendo-lhe:
-- **Tipo de peça** (do `CASO.md`).
-- **Partes qualificadas** (do `CASO.md` + `PLANO.md`).
-- **Tribunal e processo.**
-- **Estrutura de seções** conforme o `PLANO.md` (cada seção com seu texto redigido a partir da frase-tese + precedentes indicados).
-- **Precedentes a inserir:** os blocos literais da `PESQUISA.md`, mantendo ementas integrais, negritos, referências completas.
-- **Imagens:** caminhos em `.caso/documentos/` conforme o `PLANO.md`.
-- **Output path:** `.caso/fases/5-execucao/peticao.docx`.
-
-Siga os Passos 1–6 do `peticao-juridica/SKILL.md`. Para imagens, respeite o Passo 1b. Para a validação, rode `scripts/validate.sh` do `peticao-juridica`.
+1. **Copie** `~/.claude/commands/caso/templates/peticao_base.js` para `.caso/fases/5-execucao/peticao.js`.
+2. **Ajuste** `dados.outputPath` no topo do arquivo para `.caso/fases/5-execucao/peticao.docx` (caminho absoluto ou relativo ao ponto de execução).
+3. **Ajuste** `imgDir` se imagens estiverem em pasta diferente de `imagens_original` (ex: `.caso/documentos/imagens/`).
+4. **Substitua** o bloco `children: [...]` do `new Document({ sections: [...] })` pelo conteúdo real da peça, usando as funções auxiliares do próprio template. Regras detalhadas em `references/geracao-docx.md`, seções 2–4.
 
 ### 2. Redigir cada seção a partir do plano
 
-O `PLANO.md` tem frase-tese + tópicos + precedentes por seção. Você transforma isso em parágrafos numerados (01., 02., ...) conforme o estilo do `peticao-juridica`. Regras:
+O `PLANO.md` tem frase-tese + tópicos + precedentes por seção. Você transforma isso em parágrafos numerados (01., 02., ...) usando as funções do template:
 
-- Negrito inline em expressões enfáticas (não na seção toda).
-- Citações em bloco com a função `citacao()` / `citacaoRuns()` do template JS.
-- Ementa integral, nunca parcial. Se a `PESQUISA.md` registrou "Ementa parcial. Consultar íntegra em [URL]", preserve essa nota em rodapé.
-- Não invente precedente, número de processo, data de julgamento ou nome de relator. Se faltar, use exatamente o que está em `PESQUISA.md`.
+- Corpo do texto: `p("...")` ou `pRuns([...])` com negrito inline.
+- Títulos de seção (I – DOS FATOS, II – DO DIREITO, ...): `titulo("...")` — bold, sem numeração.
+- Endereçamento, qualificação, fecho, assinatura: `pSemNum(...)` / `pSemNumRuns([...])`.
+- Citações de jurisprudência: `citacao("...")` / `citacaoRuns([...])` — 11pt, recuo 1500 DXA, sem itálico.
+- Pedidos com letras: `pedido("a", "...")`, `pedido("b", "...")`, ...
+- Sub-pedidos: `subPedido("b.1", "...")`.
+- Imagens: `imagem(filename, widthPx, heightPx, descricao)` — quando `PLANO.md` indica.
+- Separação visual: `pVazio()` (porque `spacing.after: 0`).
 
-### 3. Registrar desvios
+**Regras invioláveis** (ver `references/geracao-docx.md`, seção 1):
+- Ementa integral, nunca parcial. Se a `PESQUISA.md` registrou "Ementa parcial. Consultar íntegra em [URL]", preserve essa nota após a citação como parágrafo próprio.
+- Não invente precedente, número de processo, data de julgamento ou nome de relator — use exatamente o que está em `PESQUISA.md`.
+- Endereçamento é justificado + bold, nunca centralizado.
+- Itálico apenas em termos latinos (*rebus sic stantibus*, *in verbis*).
+- Títulos de seção NUNCA são numerados — são `titulo()`, não `HeadingLevel`.
 
-Se durante a redação você precisou ajustar algo (reformular pedido para paralelismo sintático, completar ementa com busca complementar, etc.), anote em `EXECUCAO.md`. Seja explícito — é melhor documentar o desvio do que escondê-lo.
+### 3. Gerar o .docx
 
-### 4. Validar
+```bash
+cd .caso/fases/5-execucao
+NODE_PATH=$(npm root -g) node peticao.js
+```
 
-Rode a validação do `peticao-juridica`. Os checks mínimos:
+Requer `docx` (docx-js) instalado globalmente. Se o Node reclamar de módulo ausente, instale:
+
+```bash
+sudo npm install -g docx
+```
+
+### 4. Registrar desvios
+
+Se durante a redação você precisou ajustar algo (reformular pedido para paralelismo sintático, completar ementa com busca complementar, subir fonte de imagem, etc.), anote em `EXECUCAO.md`. Seja explícito — é melhor documentar o desvio do que escondê-lo.
+
+### 5. Validar
+
+```bash
+bash ~/.claude/commands/caso/scripts/validate.sh .caso/fases/5-execucao/peticao.docx
+```
+
+Checks mínimos:
+- Estrutura do `.docx` íntegra (zip válido + document.xml parseável)
 - Endereçamento contém "EXCELENT"
 - Fundamentação contém "art." ou "CPC"
 - Seção de pedidos contém "requer" / "pede"
 - Fecho contém "nestes termos" / "pede deferimento"
 - OAB presente
-- Data em formato extenso
-- Nenhum "Ementa parcial" residual sem nota explicativa
+- Data em formato extenso (`DD de <mês> de YYYY`)
+
+Se o `validate.sh` retornar exit != 0, corrija o `peticao.js`, regenere o `.docx` e rode novamente. Não entregue peça com validação estrutural falhando.
 
 ## ENCERRAMENTO (obrigatório)
 
-1. **Gere `.caso/fases/5-execucao/peticao.docx`** via skill `peticao-juridica`.
+1. **Gere `.caso/fases/5-execucao/peticao.docx`** executando `peticao.js`.
 
 2. **Escreva `.caso/fases/5-execucao/EXECUCAO.md`** preenchendo o template: resultado da validação, desvios em relação ao plano, imagens inseridas, pendências humanas (valores a conferir, jurisprudência recente a rechecar, etc.).
 

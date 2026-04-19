@@ -9,7 +9,7 @@ requer_leitura:
 
 # Pesquisa jurídica
 
-> **Para a fase de plano:** este arquivo contém blocos prontos para colagem. Cada ementa abaixo já está formatada conforme regras do `peticao-juridica`: ementa integral, referência completa, negritos em markdown. A fase 4 decide onde encaixar; a fase 5 transporta para o `.docx`.
+> **Para a fase de plano:** este arquivo contém blocos prontos para colagem. Cada ementa abaixo já está formatada conforme regras de `references/geracao-docx.md`: ementa integral, referência completa, negritos em markdown. A fase 4 decide onde encaixar; a fase 5 transporta para o `.docx`.
 
 ## Precedentes por tese
 

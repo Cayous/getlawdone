@@ -42,4 +42,4 @@ O `RESUMO-*.md` é puramente descritivo. Isola a leitura do PDF do raciocínio j
 
 ## Documentos .docx e outros formatos
 
-Para `.docx` o mesmo princípio vale: se for grande, resuma em `RESUMO-<slug>.md`. Use o fluxo do `peticao-juridica` (unzip + verificação de imagens em `/word/media/`) **somente** quando for necessário citar imagens visualmente. Caso contrário, trate como texto.
+Para `.docx` o mesmo princípio vale: se for grande, resuma em `RESUMO-<slug>.md`. Se precisar inspecionar imagens embutidas, o `.docx` é um zip — `unzip -l arquivo.docx` lista o conteúdo e as imagens ficam em `word/media/`. Só recorra a isso quando a peça final precisar citar imagens visualmente (ex: prints de conversas). Caso contrário, trate como texto.
