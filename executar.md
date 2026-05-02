@@ -18,6 +18,7 @@ Use o Read tool AGORA, nesta ordem:
 5. `~/.claude/commands/caso/templates/EXECUCAO.md`
 6. `~/.claude/commands/caso/references/geracao-docx.md` — regras tipográficas + uso do template JS
 7. `~/.claude/commands/caso/templates/peticao_base.js` — template JS com funções auxiliares (`p`, `pRuns`, `pSemNum`, `titulo`, `citacao`, `pedido`, `imagem`, ...)
+8. `~/.claude/commands/caso/references/principios-redacao.md` — 10 princípios de escrita (aplique durante toda a redação)
 
 **Se `.caso/fases/4-plano/PLANO.md` não existir**, pare e diga: "Plano não encontrado. Rode `/caso:planejar` antes."
 
@@ -45,6 +46,16 @@ O `PLANO.md` tem frase-tese + tópicos + precedentes por seção. Você transfor
 - Imagens: `imagem(filename, widthPx, heightPx, descricao)` — quando `PLANO.md` indica.
 - Separação visual: `pVazio()` (porque `spacing.after: 0`).
 
+**Princípios de redação** (ver `references/principios-redacao.md`) — aplique em cada parágrafo:
+
+- **P01 – Brevidade:** edite sem piedade. Corte tudo que não acrescente argumento. Citações: só o trecho diretamente útil.
+- **P02 – Fatos, não retórica:** proibido "claramente", "obviamente", "notoriamente". Proibido acusar o adversário de "distorcer" — os fatos bem narrados falam por si.
+- **P04 – Comece pelo fim:** o primeiro parágrafo da peça entrega o tema e o pedido em 2–3 frases. Não comece com histórico processual nem com qualificação das partes.
+- **P05 – Frases curtas, ordem direta:** sujeito → verbo → complemento. Parta períodos longos em dois.
+- **P06 – Títulos persuasivos:** o título carrega o argumento ("Perito Confirma Segurança do Produto"), não apenas descreve ("Sobre a Segurança do Produto").
+- **P08 – Padronização:** escolha uma forma para o nome das partes e termos definidos; mantenha até o fim. Estrangeirismos sempre em itálico.
+- **P09 – Realces com parcimônia:** negrito só para o verdadeiramente essencial. Petição "poluída" sinalizará falta de edição.
+
 **Regras invioláveis** (ver `references/geracao-docx.md`, seção 1):
 - Ementa integral, nunca parcial. Se a `PESQUISA.md` registrou "Ementa parcial. Consultar íntegra em [URL]", preserve essa nota após a citação como parágrafo próprio.
 - Não invente precedente, número de processo, data de julgamento ou nome de relator — use exatamente o que está em `PESQUISA.md`.
@@ -65,11 +76,25 @@ Requer `docx` (docx-js) instalado globalmente. Se o Node reclamar de módulo aus
 sudo npm install -g docx
 ```
 
-### 4. Registrar desvios
+### 4. Revisão editorial (P10 — obrigatório antes de gerar o .docx)
+
+Antes de executar `peticao.js`, releia o código JS gerado como se fosse o juiz lendo a peça:
+
+1. O primeiro parágrafo entrega tema + pedido em 2–3 frases? (P04)
+2. Há adjetivos ou expressões como "claramente", "obviamente", "notoriamente"? Remova. (P02)
+3. Períodos com mais de duas orações subordinadas? Parta em dois. (P05)
+4. Algum título de seção é descritivo em vez de persuasivo? Reescreva. (P06)
+5. Negritos excessivos (mais de 3 por seção)? Reduza. (P09)
+6. Termos das partes e termos definidos estão uniformes? (P08)
+7. Citações transcritas têm mais do que o trecho diretamente útil ao caso? Corte. (P01)
+
+Só depois de passar por essa lista gere o `.docx`.
+
+### 6. Registrar desvios
 
 Se durante a redação você precisou ajustar algo (reformular pedido para paralelismo sintático, completar ementa com busca complementar, subir fonte de imagem, etc.), anote em `EXECUCAO.md`. Seja explícito — é melhor documentar o desvio do que escondê-lo.
 
-### 5. Validar
+### 7. Validar
 
 ```bash
 bash ~/.claude/commands/caso/scripts/validate.sh .caso/fases/5-execucao/peticao.docx

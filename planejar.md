@@ -17,6 +17,7 @@ Use o Read tool AGORA, nesta ordem:
 4. `.caso/ESTADO.md`
 5. `~/.claude/commands/caso/templates/PLANO.md`
 6. `~/.claude/commands/caso/references/tipos_pecas.md` — estrutura exigida pelo tipo de peça
+7. `~/.claude/commands/caso/references/principios-redacao.md` — 10 princípios de escrita (aplique ao montar títulos e frases-tese)
 
 **Se qualquer um dos três primeiros não existir**, pare e indique qual `/caso:*` rodar antes.
 
@@ -40,6 +41,12 @@ Para cada seção da estrutura:
 - **Conteúdo esperado:** tópicos a cobrir (fatos, cálculo de prazo, exposição da decisão agravada, argumentos).
 - **Precedentes a inserir:** ids dos blocos da `PESQUISA.md` (ex: "Precedente 1.2, Doutrina sobre T1").
 - **Imagens a inserir:** se houver, com caminho em `.caso/documentos/` (ou `.caso/resumos/imagens-<slug>/`) e descrição. Ver `~/.claude/commands/caso/references/geracao-docx.md`, seção 5.
+
+**Princípios de redação a aplicar já no plano** (ver `principios-redacao.md`):
+- Princípio 04: defina o **tema-slogan** do caso — uma frase que resumirá a peça e que ficará na cabeça do decisor. Coloque-o no topo do plano.
+- Princípio 06: os **títulos de seção** devem carregar o argumento, não apenas descrever o assunto (ex: "Perito Confirma Segurança do Produto", não "Sobre a Segurança do Produto"). Planeje-os assim.
+- Princípio 07: leia os títulos em sequência — formam um sumário que resume a peça em uma página?
+- Princípio 03: a ordem das seções deve contar uma história coesa; coloque o argumento mais forte primeiro.
 
 ### 4. Planejar os pedidos
 
